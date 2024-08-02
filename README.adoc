@@ -1,0 +1,4 @@
+*- Runner*
+
+Allows to schedule sequential tasks to run concurrently,
+while also monitoring specified time boundary and OS interrupt signal.
