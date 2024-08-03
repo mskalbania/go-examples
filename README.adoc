@@ -13,6 +13,15 @@ Doesn't restrict the size but aims to maintain the specified targetSize - grows 
 
 link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/pool/pool.go#L17[pool.go]
 
+- *Work*
+
+Allows concurrent processing of work by multiple go routines.
+Backed by an unbuffered channel.
+Guarantees that work is scheduled to some worker, exchange (send/receive) must happen between goroutine.
+This is a different approach than a based pool backed by a buffered channel.
+
+link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/work/work.go#L15[work.go]
+
 - *Concurrency Examples*
 
 1. Unbuffered channel examples: link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/tenis.go#L90[tenis.go], link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/rallyrace.go#L90[rallyrace.go]

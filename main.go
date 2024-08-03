@@ -1,8 +1,6 @@
 package main
 
-import (
-	"go-examples/pool"
-)
+import "go-examples/work"
 
 func main() {
 	//concurrency.StartTennisMatch()
@@ -10,5 +8,6 @@ func main() {
 	//concurrency.ProcessConcurrently()
 
 	//runner.DemonstrateRunner()
-	pool.DemonstratePool()
+	//pool.DemonstratePool()
+	work.DemonstrateWork()
 }
