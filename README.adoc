@@ -5,6 +5,14 @@ while also monitoring specified time boundary and OS interrupt signal.
 
 link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/runner/runner.go#L20[runner.go]
 
+- *Pool*
+
+Manages a resources that can be shared by multiple goroutines (like db connections).
+Resource must implement io.Closer interface.
+Doesn't restrict the size but aims to maintain the specified targetSize - grows when required, shrinks when above targetSize.
+
+link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/pool/pool.go#L17[pool.go]
+
 - *Concurrency Examples*
 
 1. Unbuffered channel examples: link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/tenis.go#L90[tenis.go], link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/rallyrace.go#L90[rallyrace.go]

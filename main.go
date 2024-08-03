@@ -1,15 +1,14 @@
 package main
 
 import (
-	"go-examples/concurrency"
-	"go-examples/runner"
+	"go-examples/pool"
 )
 
 func main() {
-	concurrency.StartTennisMatch()
-	concurrency.StartRallyRace()
-	concurrency.ProcessConcurrently()
+	//concurrency.StartTennisMatch()
+	//concurrency.StartRallyRace()
+	//concurrency.ProcessConcurrently()
 
-	runner.DemonstrateRunner()
-
+	//runner.DemonstrateRunner()
+	pool.DemonstratePool()
 }
