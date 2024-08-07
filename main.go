@@ -1,6 +1,6 @@
 package main
 
-import "go-examples/work"
+import "go-examples/cmd/statistics"
 
 func main() {
 	//concurrency.StartTennisMatch()
@@ -9,5 +9,6 @@ func main() {
 
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
-	work.DemonstrateWork()
+	//work.DemonstrateWork()
+	statistics.PrintStatistics("")
 }

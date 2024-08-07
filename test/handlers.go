@@ -17,8 +17,6 @@ func getUsersHandler(writer http.ResponseWriter, request *http.Request) {
 		{"id1", "john"},
 		{"id2", "doe"},
 	}
-	writer.WriteHeader(200)
 	writer.Header().Add("Content-Type", "application/json")
-	b, _ := json.Marshal(&users)
-	_, _ = writer.Write(b)
+	_ = json.NewEncoder(writer).Encode(users)
 }
