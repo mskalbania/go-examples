@@ -26,3 +26,21 @@ link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b40
 
 1. Unbuffered channel examples: link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/tenis.go#L90[tenis.go], link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/rallyrace.go#L90[rallyrace.go]
 2. Buffered channel examples: link:https://github.com/mskalbania/go-examples/blob/75bf12fbd78de32d65c6c8228b4ca06eb4b7cbb6/concurrency/workergroup.go#L10[workergroup.go]
+
+- *Tests*
+
+Different Unit Test examples
+
+link:https://github.com/mskalbania/go-examples/tree/main/test[tests]
+
+- *Logging*
+
+Logging level implementation
+
+link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logging.go]
+
+- *Generics*
+
+Linked list implementation using generics.
+
+link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go]
