@@ -43,4 +43,4 @@ link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logg
 
 Linked list implementation using generics.
 
-link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go]
+link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test[linkedlist_test.go]
