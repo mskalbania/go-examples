@@ -1,14 +1,12 @@
 - *Generics*
 
 Linked list implementation using generics.
-
 link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test.go[linkedlist_test.go]
 
 - *Runner*
 
 Allows to schedule sequential tasks to run concurrently,
 while also monitoring specified time boundary and OS interrupt signal.
-
 link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/runner/runner.go#L20[runner.go]
 
 - *Pool*
@@ -16,7 +14,6 @@ link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b40
 Manages a resources that can be shared by multiple goroutines (like db connections).
 Resource must implement io.Closer interface.
 Doesn't restrict the size but aims to maintain the specified targetSize - grows when required, shrinks when above targetSize.
-
 link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/pool/pool.go#L17[pool.go]
 
 - *Work*
@@ -25,7 +22,6 @@ Allows concurrent processing of work by multiple go routines.
 Backed by an unbuffered channel.
 Guarantees that work is scheduled to some worker, exchange (send/receive) must happen between goroutine.
 This is a different approach than a based pool backed by a buffered channel.
-
 link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/work/work.go#L15[work.go]
 
 - *Concurrency Examples*
@@ -36,23 +32,19 @@ link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b40
 - *Tests*
 
 Different Unit Test examples.
-
 link:https://github.com/mskalbania/go-examples/tree/main/test[tests]
 
 - *Logging*
 
 Logging level implementation.
-
 link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logging.go]
 
 - *Which*
 
 Commandline app that scans PATH looking for requested binary.
-
 link:https://github.com/mskalbania/go-examples/blob/main/cmd/which/which.go[which.go]
 
 - *Statistics*
 
 Statistics app presented in Mastering GO 4th, showing how to apply different language concepts.
-
 link:https://github.com/mskalbania/go-examples/blob/main/cmd/statistics/statistics.go[statistics.go]
