@@ -12,7 +12,7 @@ link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b40
 Backed by an unbuffered channel.
 Guarantees that work is scheduled to some worker, exchange (send/receive) must happen between goroutine.
 This is a different approach than a based pool backed by a buffered channel.
-link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b407b86cd02ae9a/work/work.go#L15[work.go]
+link:https://github.com/mskalbania/go-examples/blob/bdc8dacff482e395b7944bb50c2ac01b8a12d4bc/work/work.go#L20[work.go]
 3. *Pool* - manages a resources that can be shared by multiple goroutines (like db connections).
 Resource must implement io.Closer interface.
 Doesn't restrict the size but aims to maintain the specified targetSize - grows when required, shrinks when above targetSize.
