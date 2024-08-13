@@ -1,3 +1,9 @@
+- *Generics*
+
+Linked list implementation using generics.
+
+link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test.go[linkedlist_test.go]
+
 - *Runner*
 
 Allows to schedule sequential tasks to run concurrently,
@@ -29,18 +35,24 @@ link:https://github.com/mskalbania/go-examples/blob/76bd8d661e07089faf47b87d2b40
 
 - *Tests*
 
-Different Unit Test examples
+Different Unit Test examples.
 
 link:https://github.com/mskalbania/go-examples/tree/main/test[tests]
 
 - *Logging*
 
-Logging level implementation
+Logging level implementation.
 
 link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logging.go]
 
-- *Generics*
+- *Which*
 
-Linked list implementation using generics.
+Commandline app that scans PATH looking for requested binary.
 
-link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test.go[linkedlist_test.go]
+link:https://github.com/mskalbania/go-examples/blob/main/cmd/which/which.go[which.go]
+
+- *Statistics*
+
+Statistics app presented in Mastering GO 4th, showing how to apply different language concepts.
+
+link:https://github.com/mskalbania/go-examples/blob/main/cmd/statistics/statistics.go[statistics.go]

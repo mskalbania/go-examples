@@ -10,5 +10,6 @@ func main() {
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
 	//work.DemonstrateWork()
-	statistics.PrintStatistics("")
+	statistics.RunWriteExample("")
+	statistics.RunReadExample()
 }

@@ -1,32 +1,61 @@
 package statistics
 
 import (
+	"cmp"
 	"fmt"
 	"math"
 	"math/rand"
+	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
 
-//PrintStatistics
+type statistics struct {
+	NumberOfValues float64
+	Min            float64
+	Max            float64
+	Mean           float64
+	StdDev         float64
+}
+
+var sortedByMean = func(s1, s2 *statistics) int {
+	return cmp.Compare(s1.Mean, s2.Mean)
+}
+
+func (s *statistics) String() string {
+	return fmt.Sprintf("Num: %.2f | Min: %.2f | Max: %.2f | Mean: %.2f | StdDev: %.2f",
+		s.NumberOfValues, s.Min, s.Max, s.Mean, s.StdDev)
+}
+
+//RunWriteExample
 /*
 Based on example from "Mastering Go 4th ed".
 */
-func PrintStatistics(input string) {
+func RunWriteExample(input string) {
 	numbers, err := parseNumbers(input)
 	if len(numbers) == 0 || err == nil {
 		fmt.Println("No valid input provided, generating one")
 		numbers = generateNumbers()
 	}
-	minF, maxF := calculateMinMax(numbers)
-	mean := calculateMean(numbers)
-	stdDev := calculateStdDev(numbers, mean)
 
-	fmt.Printf("Number of values: %d\n", len(numbers))
-	fmt.Printf("Min: %.5f\n", minF)
-	fmt.Printf("Max: %.5f\n", maxF)
-	fmt.Printf("Mean: %.5f\n", mean)
-	fmt.Printf("StdDev: %.5f\n", stdDev)
+	statistics := calculateStatistics(numbers)
+	err = storeAsCsv(statistics)
+	if err != nil {
+		fmt.Println("Unable to write to file ", err)
+	}
+}
+
+func RunReadExample() {
+	statistics, err := readCsv()
+	if err != nil {
+		fmt.Println("Unable to read the file ", err)
+		os.Exit(1)
+	}
+	slices.SortFunc(statistics, sortedByMean)
+	for _, statistic := range statistics {
+		fmt.Printf("%v\n", statistic)
+	}
 }
 
 func generateNumbers() []float64 {
@@ -36,6 +65,18 @@ func generateNumbers() []float64 {
 		numbers[i] = rand.Float64() * 10
 	}
 	return numbers
+}
+
+func calculateStatistics(numbers []float64) *statistics {
+	minF, maxF := calculateMinMax(numbers)
+	mean := calculateMean(numbers)
+	return &statistics{
+		NumberOfValues: float64(len(numbers)),
+		Min:            minF,
+		Max:            maxF,
+		Mean:           mean,
+		StdDev:         calculateStdDev(numbers, mean),
+	}
 }
 
 func parseNumbers(input string) ([]float64, error) {
