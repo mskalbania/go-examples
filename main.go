@@ -1,6 +1,6 @@
 package main
 
-import "go-examples/cmd/statistics"
+import "go-examples/postgres"
 
 func main() {
 	//concurrency.StartTennisMatch()
@@ -10,6 +10,6 @@ func main() {
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
 	//work.DemonstrateWork()
-	statistics.RunWriteExample("")
-	statistics.RunReadExample()
+	//statistics.RunReadExample()
+	postgres.RunExample()
 }
