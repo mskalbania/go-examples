@@ -6,7 +6,7 @@ link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[
 *Postgres*
 
 Postgres CRUD repository example using pgx driver.
-link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[postgres.go]|link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go]
+link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[postgres.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go]
 
 *Concurrency Examples*
 
