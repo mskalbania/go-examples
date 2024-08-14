@@ -3,6 +3,11 @@
 Linked list implementation using generics.
 link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test.go[linkedlist_test.go]
 
+*Postgres*
+
+Postgres CRUD repository example using pgx driver.
+link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go]
+
 *Concurrency Examples*
 
 1. *Runner* - allows to schedule sequential tasks to run concurrently,
