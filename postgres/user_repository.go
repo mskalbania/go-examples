@@ -33,6 +33,10 @@ type User struct {
 	Role     string
 }
 
+// SaveUser saves user payload to user and user data tables.
+// To ensure data consistency inserts are wrapped in transaction.
+// Returns user id if successful.
+// Returns UserAlreadyExistsError if user with given username already exists.
 func SaveUser(user User) (string, error) {
 	if exist, err := userExists(user.Username); err != nil {
 		return "", fmt.Errorf("error saving user: %w", err)
@@ -59,6 +63,8 @@ func SaveUser(user User) (string, error) {
 	return id, nil
 }
 
+// GetAllUsers slice of users if successful.
+// Performs left join of user and user data tables to fetch all data.
 func GetAllUsers() ([]*User, error) {
 	var users []*User
 	rows, err := connection.Query(context.Background(), selectUsersQuery)
@@ -76,6 +82,10 @@ func GetAllUsers() ([]*User, error) {
 	return users, nil
 }
 
+// DeleteUser deletes user and user data records by user id.
+// Deletes first from user data table and then from user table.
+// To ensure data consistency deletes are wrapped in transaction.
+// No error when user missing - call to delete is idempotent.
 func DeleteUser(id string) error {
 	tx, err := connection.BeginTx(context.Background(), pgx.TxOptions{
 		IsoLevel:   pgx.ReadCommitted,
@@ -96,6 +106,8 @@ func DeleteUser(id string) error {
 	return nil
 }
 
+// UpdateUser updates user data table record by user id.
+// Call to update is idempotent.
 func UpdateUser(user User) error {
 	if _, err := connection.Exec(context.Background(), updateUserDataQuery, user.Name, user.Surname, user.Role, user.ID); err != nil {
 		return fmt.Errorf("error updating user data record %w", err)

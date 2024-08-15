@@ -2,14 +2,16 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"github.com/jackc/pgx/v5"
 	"log"
 )
 
 var connection *pgx.Conn
 
-func init() {
-	conn, err := pgx.Connect(context.Background(), "postgres://postgres:postgres@localhost:5432/postgres")
+func openConnection(user string, password string, host string, port int, database string) {
+	url := fmt.Sprintf("postgres://%s:%s@%s:%d/%s", user, password, host, port, database)
+	conn, err := pgx.Connect(context.Background(), url)
 	if err != nil {
 		log.Fatalf("error connecting to postgres: %v", err)
 	}
