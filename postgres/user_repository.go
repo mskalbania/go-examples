@@ -1,3 +1,8 @@
+// Package postgres
+// CRUD example with postgres pgx driver, using two tables: users and user_data.
+// Schema DDL located in docker/init.sql.
+// Schema "diagram" located in docker/schema.png.
+// Using transactions to ensure data consistency.
 package postgres
 
 import (
@@ -7,11 +12,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
-
-/*
-CRUD example with postgres pgx driver, using two tables: users and user_data.
-Using transactions to ensure data consistency.
-*/
 
 var (
 	insertUserQuery           = "INSERT INTO users (id, user_name) VALUES ($1, $2)"
@@ -23,8 +23,10 @@ var (
 	updateUserDataQuery       = "UPDATE user_data SET name=$1, surname=$2, role=$3 WHERE user_id=$4"
 )
 
+// UserAlreadyExistsError error when user with given username already exists.
 var UserAlreadyExistsError = fmt.Errorf("user with given username already exists")
 
+// User represents both user and user data tables.
 type User struct {
 	ID       string
 	Username string

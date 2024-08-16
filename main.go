@@ -1,8 +1,16 @@
 package main
 
-import "go-examples/postgres"
+import (
+	"go-examples/cmd/statistics"
+	"log"
+)
+
+// injected with ldflags
+// go build -ldflags "-X main.version=$VERSION"
+var version string
 
 func main() {
+	log.Printf("Starting application version=%v", version)
 	//concurrency.StartTennisMatch()
 	//concurrency.StartRallyRace()
 	//concurrency.ProcessConcurrently()
@@ -10,6 +18,5 @@ func main() {
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
 	//work.DemonstrateWork()
-	//statistics.RunReadExample()
-	postgres.RunExample()
+	statistics.RunReadExample()
 }
