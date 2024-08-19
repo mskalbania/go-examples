@@ -37,7 +37,7 @@ Logging level implementation.
 link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logging.go]
 
 Logging using latest slog package.
-link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[slog.go]
+link:https://github.com/mskalbania/go-examples/blob/main/logging/slog.go[slog.go]
 
 *Commandline*
 
