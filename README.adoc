@@ -36,9 +36,14 @@ link:https://github.com/mskalbania/go-examples/tree/main/test[tests]
 Logging level implementation.
 link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[logging.go]
 
-*Which app*
+Logging using latest slog package.
+link:https://github.com/mskalbania/go-examples/blob/main/logging/logging.go[slog.go]
 
-Commandline app that scans PATH looking for requested binary.
+*Commandline*
+
+1. *Viper* - tiny example of how to use viper to read flags/config. link:https://github.com/mskalbania/go-examples/blob/main/cmd/viper/viper.go[viper.go]
+2. *Cobra* - example of how to use cobra to create CLI. link:https://github.com/mskalbania/go-examples/blob/main/cmd/cobra/cobra.go[cobra.go]
+3. *Which app* - Commandline app that scans PATH looking for requested binary.
 link:https://github.com/mskalbania/go-examples/blob/main/cmd/which/which.go[which.go]
 
 *Statistics app*

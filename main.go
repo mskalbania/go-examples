@@ -1,16 +1,27 @@
 package main
 
 import (
-	"go-examples/cmd/statistics"
+	_ "embed"
+	"go-examples/logging"
 	"log"
+	"regexp"
 )
 
 // injected with ldflags
 // go build -ldflags "-X main.version=$VERSION"
 var version string
 
+// example of including some file in binary
+//
+//go:embed go.mod
+var embedFile string
+
 func main() {
-	log.Printf("Starting application version=%v", version)
+	log.Printf("Application version=%v", version)
+	match := regexp.MustCompile(`go (\d+\.\d+)`).FindStringSubmatch(embedFile)
+	if match != nil && len(match) > 1 {
+		log.Printf("Go version: %v", match[1])
+	}
 	//concurrency.StartTennisMatch()
 	//concurrency.StartRallyRace()
 	//concurrency.ProcessConcurrently()
@@ -18,5 +29,6 @@ func main() {
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
 	//work.DemonstrateWork()
-	statistics.RunReadExample()
+	//statistics.RunReadExample()
+	logging.RunSlogExample()
 }
