@@ -1,7 +1,7 @@
 *Generics*
 
 Linked list implementation using generics.
-link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist.go[linkedlist.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linkedlist_test.go[linkedlist_test.go]
+link:https://github.com/mskalbania/go-examples/blob/main/generics/linked_list.go[linked_list.go] | link:https://github.com/mskalbania/go-examples/blob/main/generics/linked_list_test.go[linked_list_test.go]
 
 *Postgres*
 
@@ -45,8 +45,3 @@ link:https://github.com/mskalbania/go-examples/blob/main/logging/slog.go[slog.go
 2. *Cobra* - example of how to use cobra to create CLI. link:https://github.com/mskalbania/go-examples/blob/main/cmd/cobra/cobra.go[cobra.go]
 3. *Which app* - Commandline app that scans PATH looking for requested binary.
 link:https://github.com/mskalbania/go-examples/blob/main/cmd/which/which.go[which.go]
-
-*Statistics app*
-
-Statistics app presented in Mastering GO 4th, showing how to apply different language concepts.
-link:https://github.com/mskalbania/go-examples/blob/main/cmd/statistics/statistics.go[statistics.go]
