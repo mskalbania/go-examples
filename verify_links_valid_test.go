@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"sync"
 	"testing"
 )
 
@@ -40,17 +41,48 @@ func TestLinksInReadmeValid(t *testing.T) {
 			}
 			t.Logf("\t\tThen all links are valid")
 			{
+				var wg sync.WaitGroup
+				wg.Add(len(links))
+				results := make(chan result)
+
 				for _, link := range links {
-					rs, err := http.Get(link)
-					if err != nil {
-						t.Fatalf("\t\tfailed to get link %s: %s", link, err)
+					go func(l string) {
+						rs, err := http.Get(l)
+						if err != nil {
+							results <- result{link: l, error: err}
+						} else {
+							results <- result{link: l, code: &rs.StatusCode}
+						}
+						rs.Body.Close()
+						wg.Done()
+					}(link)
+				}
+				go func() {
+					wg.Wait()
+					close(results)
+				}()
+
+				failed := false
+				for r := range results {
+					if r.error != nil {
+						t.Logf("\t\t\tfailed to get link %s: %s", r.link, r.error)
+						failed = true
 					}
-					rs.Body.Close()
-					if rs.StatusCode != http.StatusOK {
-						t.Fatalf("\t\tlink %s returned status %d", link, rs.StatusCode)
+					if r.code != nil && *r.code != http.StatusOK {
+						t.Logf("\t\t\tlink %s returned status %d", r.link, *r.code)
+						failed = true
 					}
+				}
+				if failed {
+					t.Fatal("\t\t\tfailed to verify any of the links")
 				}
 			}
 		}
 	}
+}
+
+type result struct {
+	link  string
+	code  *int
+	error error
 }
