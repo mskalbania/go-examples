@@ -2,9 +2,10 @@ package main
 
 import (
 	_ "embed"
-	"go-examples/logging"
+	"go-examples/http"
 	"log"
 	"regexp"
+	"time"
 )
 
 // injected with ldflags
@@ -29,6 +30,9 @@ func main() {
 	//runner.DemonstrateRunner()
 	//pool.DemonstratePool()
 	//work.DemonstrateWork()
-	//statistics.RunReadExample()
-	logging.RunSlogExample()
+	go func() {
+		time.Sleep(2 * time.Second)
+		http.RunClient()
+	}()
+	http.RunServer()
 }

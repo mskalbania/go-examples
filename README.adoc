@@ -9,6 +9,16 @@ Postgres CRUD repository example using pgx driver.
 Then tested using test containers API.
 link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[postgres.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository_test.go[user_repository_test.go]
 
+*Net*
+
+Some examples form net package.
+link:https://github.com/mskalbania/go-examples/blob/main/http/client.go[client.go] | link:https://github.com/mskalbania/go-examples/blob/main/http/server.go[server.go]
+
+*Docker*
+
+How to use docker & docker-compose in go.
+link:https://github.com/mskalbania/go-examples/blob/main/docker/Dockerfile[Dockerfile] | link:https://github.com/mskalbania/go-examples/blob/main/docker/docker-compose.yaml[docker-compose.yaml]
+
 *Concurrency Examples*
 
 1. *Runner* - allows to schedule sequential tasks to run concurrently,
