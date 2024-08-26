@@ -9,12 +9,11 @@ Postgres CRUD repository example using pgx driver.
 Then tested using test containers API.
 link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[postgres.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository_test.go[user_repository_test.go]
 
-*Net*
+*Network*
 
-Some examples form net package.
-
-HTTP:
-link:https://github.com/mskalbania/go-examples/blob/main/http/client.go[client.go] | link:https://github.com/mskalbania/go-examples/blob/main/http/server.go[server.go]
+Some examples for networking.
+link:https://github.com/mskalbania/go-examples/blob/main/network/http.go[http.go] |
+link:https://github.com/mskalbania/go-examples/blob/main/network/tcp.go[tcp.go]
 
 *Docker*
 
