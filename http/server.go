@@ -18,8 +18,8 @@ func RunServer() {
 		Addr:         ":8080",
 		Handler:      mux,
 		IdleTimeout:  10 * time.Second, //time to wait for the next request when keep-alive is enabled
-		ReadTimeout:  time.Second,
-		WriteTimeout: time.Second,
+		ReadTimeout:  time.Second,      //specifies the maximum duration allowed to read the entire client request
+		WriteTimeout: time.Second,      //specifies the maximum duration before timing out write of the response
 	}
 
 	log.Printf("server starting on %v", server.Addr)

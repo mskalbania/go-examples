@@ -12,6 +12,8 @@ link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[po
 *Net*
 
 Some examples form net package.
+
+HTTP:
 link:https://github.com/mskalbania/go-examples/blob/main/http/client.go[client.go] | link:https://github.com/mskalbania/go-examples/blob/main/http/server.go[server.go]
 
 *Docker*
