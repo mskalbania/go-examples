@@ -11,9 +11,15 @@ link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[po
 
 *Network*
 
-Some examples for networking.
-link:https://github.com/mskalbania/go-examples/blob/main/network/http.go[http.go] |
+Http server and client using net/http package.
+link:https://github.com/mskalbania/go-examples/blob/main/network/http.go[http.go]
+
+Lower level tcp server and client using net package.
 link:https://github.com/mskalbania/go-examples/blob/main/network/tcp.go[tcp.go]
+
+Websocket server and client using gorilla/websocket package.
+Both server and client asynchronously broadcasts and listens in separate goroutines.
+link:https://github.com/mskalbania/go-examples/blob/main/network/websocket.go[websocket.go]
 
 *Docker*
 
