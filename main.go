@@ -2,7 +2,7 @@ package main
 
 import (
 	_ "embed"
-	"go-examples/network"
+	"go-examples/rest"
 	"log"
 	"regexp"
 )
@@ -31,5 +31,6 @@ func main() {
 	//work.DemonstrateWork()
 	//network.RunDialListenTcpIp()
 	//network.RunHttpExample()
-	network.RunWebsocketExample()
+	//network.RunWebsocketExample()
+	rest.StartRestAPIExample()
 }
