@@ -3,8 +3,11 @@ package rest
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-examples/rest/api"
+	"go-examples/rest/config"
+	"go-examples/rest/database"
 	"go-examples/rest/repository"
 	"log"
 	"net/http"
@@ -14,27 +17,43 @@ import (
 	"time"
 )
 
-//TODO:
-//1. sqlLite repository
-//2. Tests
-//3. Add validation
+//TODO
+//Add validation
+//Tests
+//Contexts
 
 func StartRestAPIExample() {
+	env := os.Getenv("ENV")
+	if env == "" {
+		log.Fatalf("env is required")
+	}
+	appConfig := config.Read(env)
+
 	g := gin.Default()
 
-	app := api.NewUserAPI(repository.NewInMemoryUserRepository())
+	postgres, closable, err := database.NewPostgresDatabase(appConfig)
+	defer closable()
+
+	if err != nil {
+		log.Fatalf("error connecting to database: %v", err)
+	}
+
+	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres))
+	healthAPI := api.NewHealthAPI(postgres)
+
+	g.GET("/health", healthAPI.Health)
 
 	g.Group("v1")
 	{
-		g.GET("/users", app.GetUsers)
-		g.GET("/users/:id", app.GetUserById)
-		g.POST("/users", app.CreateUser)
-		g.DELETE("/users/:id", app.DeleteUser)
-		g.PUT("/users/:id", app.UpdateUser)
+		g.GET("/users", userAPI.GetUsers)
+		g.GET("/users/:id", userAPI.GetUserById)
+		g.POST("/users", userAPI.CreateUser)
+		g.DELETE("/users/:id", userAPI.DeleteUser)
+		g.PUT("/users/:id", userAPI.UpdateUser)
 	}
 
 	srv := &http.Server{
-		Addr:    "localhost:8080",
+		Addr:    fmt.Sprintf("%s:%d", appConfig.Server.Host, appConfig.Server.Port),
 		Handler: g.Handler(),
 	}
 
@@ -54,7 +73,7 @@ func gracefulShutdown(server *http.Server) {
 	<-shutdown //blocks until shutdown signal is received
 	log.Println("shutting down server")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("error shutting down server: %v", err)
