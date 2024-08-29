@@ -18,7 +18,6 @@ var (
 )
 
 var ErrUserNotFound = errors.New("user not found")
-var ErrUserAlreadyExists = errors.New("user already exists")
 
 type UserRepository struct {
 	postgres *database.PostgresDatabase
@@ -61,28 +60,27 @@ func (repository *UserRepository) GetUserById(id string) (*model.User, error) {
 	return user, nil
 }
 
-func (repository *UserRepository) Save(user *model.User) (*model.User, error) {
-	user.ID = uuid.New().String()
-	_, err := repository.postgres.Conn.Exec(context.TODO(), insertUser, user.ID, user.Email)
+func (repository *UserRepository) Save(postUser *model.PostUser) (*model.User, error) {
+	id := uuid.New().String()
+	_, err := repository.postgres.Conn.Exec(context.TODO(), insertUser, id, postUser.Email)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &model.User{
+		ID:    id,
+		Email: postUser.Email,
+	}, nil
 }
 
-func (repository *UserRepository) Update(user *model.User) (*model.User, error) {
-	exists, err := repository.Exists(user.ID)
+func (repository *UserRepository) Update(id string, user *model.PostUser) (*model.User, error) {
+	_, err := repository.postgres.Conn.Exec(context.TODO(), updateUser, user.Email, id)
 	if err != nil {
 		return nil, err
 	}
-	if !exists {
-		return nil, ErrUserNotFound
-	}
-	_, err = repository.postgres.Conn.Exec(context.TODO(), updateUser, user.Email, user.ID)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+	return &model.User{
+		ID:    id,
+		Email: user.Email,
+	}, nil
 }
 
 func (repository *UserRepository) Exists(id string) (bool, error) {

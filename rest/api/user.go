@@ -11,8 +11,8 @@ import (
 type UserRepository interface {
 	GetAllUsers() ([]*model.User, error)
 	GetUserById(id string) (*model.User, error)
-	Save(user *model.User) (*model.User, error)
-	Update(user *model.User) (*model.User, error)
+	Save(user *model.PostUser) (*model.User, error)
+	Update(id string, user *model.PostUser) (*model.User, error)
 	Exists(id string) (bool, error)
 	Delete(id string) error
 }
@@ -28,7 +28,7 @@ func NewUserAPI(userRepository UserRepository) *UserAPI {
 func (userAPI *UserAPI) GetUsers(context *gin.Context) {
 	users, err := userAPI.userRepository.GetAllUsers()
 	if err != nil {
-		abortWithError(context, http.StatusInternalServerError, "error getting users", err)
+		AbortWithError(context, http.StatusInternalServerError, "error getting users", err)
 		return
 	}
 	context.JSON(http.StatusOK, users)
@@ -37,30 +37,31 @@ func (userAPI *UserAPI) GetUsers(context *gin.Context) {
 func (userAPI *UserAPI) GetUserById(context *gin.Context) {
 	id := context.Param("id")
 	if id == "" {
-		abortWithError(context, http.StatusBadRequest, "id is required", nil)
+		Abort(context, http.StatusBadRequest, "id is required")
+		return
 	}
 	user, err := userAPI.userRepository.GetUserById(id)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
-			abortWithError(context, http.StatusNotFound, "user not found", err)
+			Abort(context, http.StatusNotFound, "user not found")
 			return
 		}
-		abortWithError(context, http.StatusInternalServerError, "error getting user", err)
+		AbortWithError(context, http.StatusInternalServerError, "error getting user", err)
 		return
 	}
 	context.JSON(http.StatusOK, user)
 }
 
 func (userAPI *UserAPI) CreateUser(context *gin.Context) {
-	var user model.User
-	err := context.Bind(&user)
+	user := new(model.PostUser)
+	err := context.ShouldBindJSON(user)
 	if err != nil {
-		abortWithError(context, http.StatusBadRequest, "error reading request", err)
+		Abort(context, http.StatusBadRequest, "invalid request")
 		return
 	}
-	_, err = userAPI.userRepository.Save(&user)
+	_, err = userAPI.userRepository.Save(user)
 	if err != nil {
-		abortWithError(context, http.StatusInternalServerError, "error saving user", err)
+		AbortWithError(context, http.StatusInternalServerError, "error saving user", err)
 		return
 	}
 	context.JSON(http.StatusCreated, user)
@@ -69,41 +70,38 @@ func (userAPI *UserAPI) CreateUser(context *gin.Context) {
 func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
 	id := context.Param("id")
 	if id == "" {
-		abortWithError(context, http.StatusBadRequest, "id is required", nil)
+		Abort(context, http.StatusBadRequest, "id is required")
+		return
 	}
 	err := userAPI.userRepository.Delete(id)
 	if err != nil {
-		abortWithError(context, http.StatusInternalServerError, "error deleting user", err)
+		AbortWithError(context, http.StatusInternalServerError, "error deleting user", err)
 		return
 	}
 	context.Status(http.StatusNoContent)
 }
 
 func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
-	var user model.User
-	err := context.ShouldBindUri(&user) //automatically binds path "id" to struct field "ID"
+	id := context.Param("id")
+	exists, err := userAPI.userRepository.Exists(id)
 	if err != nil {
-		abortWithError(context, http.StatusBadRequest, "uuid id is required", err)
+		AbortWithError(context, http.StatusInternalServerError, "error updating user", err)
 		return
 	}
-	err = context.ShouldBindJSON(&user) //and now other parts of the request body
+	if !exists {
+		Abort(context, http.StatusNotFound, "user not found")
+		return
+	}
+	user := new(model.PostUser)
+	err = context.ShouldBindJSON(user)
 	if err != nil {
-		abortWithError(context, http.StatusBadRequest, "error reading request", err)
+		Abort(context, http.StatusBadRequest, "invalid request")
 		return
 	}
-	exists, err := userAPI.userRepository.Exists(user.ID)
+	updated, err := userAPI.userRepository.Update(id, user)
 	if err != nil {
-		abortWithError(context, http.StatusInternalServerError, "error updating user", err)
+		AbortWithError(context, http.StatusInternalServerError, "error updating user", err)
 		return
 	}
-	if exists {
-		_, err := userAPI.userRepository.Update(&user)
-		if err != nil {
-			abortWithError(context, http.StatusInternalServerError, "error updating user", err)
-			return
-		}
-		context.JSON(http.StatusOK, user)
-		return
-	}
-	abortWithError(context, http.StatusNotFound, "user not found", nil)
+	context.JSON(http.StatusOK, updated)
 }

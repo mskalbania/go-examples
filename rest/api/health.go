@@ -17,7 +17,7 @@ func NewHealthAPI(postgres *database.PostgresDatabase) *HealthAPI {
 func (healthAPI *HealthAPI) Health(ctx *gin.Context) {
 	err := healthAPI.postgres.Conn.Ping(context.TODO())
 	if err != nil {
-		abortWithError(ctx, 500, "db not reachable", err)
+		AbortWithError(ctx, 500, "db not reachable", err)
 		return
 	}
 	ctx.Status(200)

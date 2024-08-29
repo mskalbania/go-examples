@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-examples/rest/api"
+	"go-examples/rest/auth"
 	"go-examples/rest/config"
 	"go-examples/rest/database"
 	"go-examples/rest/repository"
@@ -18,7 +19,6 @@ import (
 )
 
 //TODO
-//Add validation
 //Tests
 //Contexts
 
@@ -38,18 +38,19 @@ func StartRestAPIExample() {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 
+	authentication := auth.NewAuthentication()
 	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres))
 	healthAPI := api.NewHealthAPI(postgres)
 
 	g.GET("/health", healthAPI.Health)
 
-	g.Group("v1")
+	userGroup := g.Group("/api/v1").Use(authentication.RequireAPIToken())
 	{
-		g.GET("/users", userAPI.GetUsers)
-		g.GET("/users/:id", userAPI.GetUserById)
-		g.POST("/users", userAPI.CreateUser)
-		g.DELETE("/users/:id", userAPI.DeleteUser)
-		g.PUT("/users/:id", userAPI.UpdateUser)
+		userGroup.GET("/users", userAPI.GetUsers)
+		userGroup.GET("/users/:id", userAPI.GetUserById)
+		userGroup.POST("/users", userAPI.CreateUser)
+		userGroup.DELETE("/users/:id", userAPI.DeleteUser)
+		userGroup.PUT("/users/:id", userAPI.UpdateUser)
 	}
 
 	srv := &http.Server{
