@@ -7,15 +7,15 @@ import (
 )
 
 type HealthAPI struct {
-	postgres *database.PostgresDatabase
+	database database.Database
 }
 
-func NewHealthAPI(postgres *database.PostgresDatabase) *HealthAPI {
-	return &HealthAPI{postgres}
+func NewHealthAPI(database database.Database) *HealthAPI {
+	return &HealthAPI{database: database}
 }
 
 func (healthAPI *HealthAPI) Health(ctx *gin.Context) {
-	err := healthAPI.postgres.Conn.Ping(context.TODO())
+	err := healthAPI.database.Ping(context.TODO())
 	if err != nil {
 		AbortWithError(ctx, 500, "db not reachable", err)
 		return

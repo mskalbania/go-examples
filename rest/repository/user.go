@@ -20,17 +20,17 @@ var (
 var ErrUserNotFound = errors.New("user not found")
 
 type UserRepository struct {
-	postgres *database.PostgresDatabase
+	database database.Database
 }
 
-func NewUserRepository(postgres *database.PostgresDatabase) *UserRepository {
+func NewUserRepository(database database.Database) *UserRepository {
 	return &UserRepository{
-		postgres: postgres,
+		database: database,
 	}
 }
 
 func (repository *UserRepository) GetAllUsers() ([]*model.User, error) {
-	rows, err := repository.postgres.Conn.Query(context.TODO(), selectAllUsers)
+	rows, err := repository.database.Query(context.TODO(), selectAllUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (repository *UserRepository) GetAllUsers() ([]*model.User, error) {
 }
 
 func (repository *UserRepository) GetUserById(id string) (*model.User, error) {
-	row := repository.postgres.Conn.QueryRow(context.TODO(), selectUserById, id)
+	row := repository.database.QueryRow(context.TODO(), selectUserById, id)
 	user := new(model.User)
 	err := row.Scan(&user.ID, &user.Email)
 	if err != nil {
@@ -62,7 +62,7 @@ func (repository *UserRepository) GetUserById(id string) (*model.User, error) {
 
 func (repository *UserRepository) Save(postUser *model.PostUser) (*model.User, error) {
 	id := uuid.New().String()
-	_, err := repository.postgres.Conn.Exec(context.TODO(), insertUser, id, postUser.Email)
+	_, err := repository.database.Exec(context.TODO(), insertUser, id, postUser.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (repository *UserRepository) Save(postUser *model.PostUser) (*model.User, e
 }
 
 func (repository *UserRepository) Update(id string, user *model.PostUser) (*model.User, error) {
-	_, err := repository.postgres.Conn.Exec(context.TODO(), updateUser, user.Email, id)
+	_, err := repository.database.Exec(context.TODO(), updateUser, user.Email, id)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (repository *UserRepository) Exists(id string) (bool, error) {
 }
 
 func (repository *UserRepository) Delete(id string) error {
-	_, err := repository.postgres.Conn.Exec(context.TODO(), deleteUser, id)
+	_, err := repository.database.Exec(context.TODO(), deleteUser, id)
 	if err != nil {
 		return err
 	}
