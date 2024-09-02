@@ -17,11 +17,11 @@ type Database interface {
 }
 
 func NewPostgresDatabase(config *config.AppConfig) (Database, func(), error) {
-	conn, err := pgx.Connect(context.TODO(), connectionString(config))
+	conn, err := pgx.Connect(context.Background(), connectionString(config))
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := conn.Ping(context.TODO()); err != nil {
+	if err := conn.Ping(context.Background()); err != nil {
 		return nil, nil, err
 	}
 	return conn, func() {

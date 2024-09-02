@@ -1,7 +1,6 @@
 package api
 
 import (
-	"context"
 	"github.com/gin-gonic/gin"
 	"go-examples/rest/database"
 )
@@ -15,9 +14,9 @@ func NewHealthAPI(database database.Database) *HealthAPI {
 }
 
 func (healthAPI *HealthAPI) Health(ctx *gin.Context) {
-	err := healthAPI.database.Ping(context.TODO())
+	err := healthAPI.database.Ping(ctx)
 	if err != nil {
-		AbortWithError(ctx, 500, "db not reachable", err)
+		AbortWithContextError(ctx, 500, "db not reachable", err)
 		return
 	}
 	ctx.Status(200)

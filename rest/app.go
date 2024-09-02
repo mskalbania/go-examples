@@ -19,8 +19,8 @@ import (
 )
 
 //TODO
-//Tests
-//Contexts
+//more tests
+//context timeouts for db
 
 func StartRestAPIExample() {
 	env := os.Getenv("ENV")

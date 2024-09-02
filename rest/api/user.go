@@ -28,7 +28,7 @@ func NewUserAPI(userRepository UserRepository) *UserAPI {
 func (userAPI *UserAPI) GetUsers(context *gin.Context) {
 	users, err := userAPI.userRepository.GetAllUsers()
 	if err != nil {
-		AbortWithError(context, http.StatusInternalServerError, "error getting users", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error getting users", err)
 		return
 	}
 	context.JSON(http.StatusOK, users)
@@ -46,7 +46,7 @@ func (userAPI *UserAPI) GetUserById(context *gin.Context) {
 			Abort(context, http.StatusNotFound, "user not found")
 			return
 		}
-		AbortWithError(context, http.StatusInternalServerError, "error getting user", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error getting user", err)
 		return
 	}
 	context.JSON(http.StatusOK, user)
@@ -59,12 +59,12 @@ func (userAPI *UserAPI) CreateUser(context *gin.Context) {
 		Abort(context, http.StatusBadRequest, "invalid request")
 		return
 	}
-	_, err = userAPI.userRepository.Save(user)
+	created, err := userAPI.userRepository.Save(user)
 	if err != nil {
-		AbortWithError(context, http.StatusInternalServerError, "error saving user", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error saving user", err)
 		return
 	}
-	context.JSON(http.StatusCreated, user)
+	context.JSON(http.StatusCreated, created)
 }
 
 func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
@@ -75,7 +75,7 @@ func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
 	}
 	err := userAPI.userRepository.Delete(id)
 	if err != nil {
-		AbortWithError(context, http.StatusInternalServerError, "error deleting user", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error deleting user", err)
 		return
 	}
 	context.Status(http.StatusNoContent)
@@ -85,7 +85,7 @@ func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
 	id := context.Param("id")
 	exists, err := userAPI.userRepository.Exists(id)
 	if err != nil {
-		AbortWithError(context, http.StatusInternalServerError, "error updating user", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error updating user", err)
 		return
 	}
 	if !exists {
@@ -100,7 +100,7 @@ func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
 	}
 	updated, err := userAPI.userRepository.Update(id, user)
 	if err != nil {
-		AbortWithError(context, http.StatusInternalServerError, "error updating user", err)
+		AbortWithContextError(context, http.StatusInternalServerError, "error updating user", err)
 		return
 	}
 	context.JSON(http.StatusOK, updated)
