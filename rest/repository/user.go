@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"go-examples/rest/config"
 	"go-examples/rest/database"
 	"go-examples/rest/model"
 )
@@ -21,16 +22,20 @@ var ErrUserNotFound = errors.New("user not found")
 
 type UserRepository struct {
 	database database.Database
+	config   *config.DBConfig
 }
 
-func NewUserRepository(database database.Database) *UserRepository {
+func NewUserRepository(database database.Database, config *config.DBConfig) *UserRepository {
 	return &UserRepository{
 		database: database,
+		config:   config,
 	}
 }
 
-func (repository *UserRepository) GetAllUsers() ([]*model.User, error) {
-	rows, err := repository.database.Query(context.Background(), selectAllUsers)
+func (repository *UserRepository) GetAllUsers(ctx context.Context) ([]*model.User, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
+	rows, err := repository.database.Query(timeoutCtx, selectAllUsers)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +52,10 @@ func (repository *UserRepository) GetAllUsers() ([]*model.User, error) {
 	return users, nil
 }
 
-func (repository *UserRepository) GetUserById(id string) (*model.User, error) {
-	row := repository.database.QueryRow(context.Background(), selectUserById, id)
+func (repository *UserRepository) GetUserById(ctx context.Context, id string) (*model.User, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
+	row := repository.database.QueryRow(timeoutCtx, selectUserById, id)
 	user := new(model.User)
 	err := row.Scan(&user.ID, &user.Email)
 	if err != nil {
@@ -60,9 +67,11 @@ func (repository *UserRepository) GetUserById(id string) (*model.User, error) {
 	return user, nil
 }
 
-func (repository *UserRepository) Save(postUser *model.PostUser) (*model.User, error) {
+func (repository *UserRepository) Save(ctx context.Context, postUser *model.PostUser) (*model.User, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
 	id := uuid.New().String()
-	_, err := repository.database.Exec(context.Background(), insertUser, id, postUser.Email)
+	_, err := repository.database.Exec(timeoutCtx, insertUser, id, postUser.Email)
 	if err != nil {
 		return nil, err
 	}
@@ -72,8 +81,10 @@ func (repository *UserRepository) Save(postUser *model.PostUser) (*model.User, e
 	}, nil
 }
 
-func (repository *UserRepository) Update(id string, user *model.PostUser) (*model.User, error) {
-	_, err := repository.database.Exec(context.Background(), updateUser, user.Email, id)
+func (repository *UserRepository) Update(ctx context.Context, id string, user *model.PostUser) (*model.User, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
+	_, err := repository.database.Exec(timeoutCtx, updateUser, user.Email, id)
 	if err != nil {
 		return nil, err
 	}
@@ -83,8 +94,10 @@ func (repository *UserRepository) Update(id string, user *model.PostUser) (*mode
 	}, nil
 }
 
-func (repository *UserRepository) Exists(id string) (bool, error) {
-	_, err := repository.GetUserById(id)
+func (repository *UserRepository) Exists(ctx context.Context, id string) (bool, error) {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
+	_, err := repository.GetUserById(timeoutCtx, id)
 	if err != nil {
 		if errors.Is(err, ErrUserNotFound) {
 			return false, nil
@@ -94,8 +107,10 @@ func (repository *UserRepository) Exists(id string) (bool, error) {
 	return true, nil
 }
 
-func (repository *UserRepository) Delete(id string) error {
-	_, err := repository.database.Exec(context.Background(), deleteUser, id)
+func (repository *UserRepository) Delete(ctx context.Context, id string) error {
+	timeoutCtx, cancel := context.WithTimeout(ctx, repository.config.Timeout)
+	defer cancel()
+	_, err := repository.database.Exec(timeoutCtx, deleteUser, id)
 	if err != nil {
 		return err
 	}

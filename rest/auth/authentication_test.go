@@ -21,6 +21,7 @@ func TestAuthenticationSuite(t *testing.T) {
 }
 
 func (s *AuthenticationSuite) BeforeTest(suiteName, testName string) {
+	gin.SetMode(gin.TestMode)
 	s.recorder = httptest.NewRecorder()
 	s.ctx, _ = gin.CreateTestContext(s.recorder)
 	s.authentication = NewAuthentication()

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"go-examples/rest/config"
 	"time"
 )
@@ -17,21 +18,21 @@ type Database interface {
 }
 
 func NewPostgresDatabase(config *config.AppConfig) (Database, func(), error) {
-	conn, err := pgx.Connect(context.Background(), connectionString(config))
+	pool, err := pgxpool.New(context.Background(), connectionString(config))
 	if err != nil {
 		return nil, nil, err
 	}
-	if err := conn.Ping(context.Background()); err != nil {
+	if err := pool.Ping(context.Background()); err != nil {
 		return nil, nil, err
 	}
-	return conn, func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	return pool, func() {
+		_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		conn.Close(ctx)
+		pool.Close()
 	}, nil
 }
 
 func connectionString(config *config.AppConfig) string {
-	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
-		config.DB.User, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.Database)
+	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?pool_max_conns=%d&pool_min_conns=%d",
+		config.DB.User, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.Database, config.DB.Pool.Max, config.DB.Pool.Min)
 }

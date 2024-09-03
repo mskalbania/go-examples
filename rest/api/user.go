@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"go-examples/rest/model"
@@ -9,12 +10,12 @@ import (
 )
 
 type UserRepository interface {
-	GetAllUsers() ([]*model.User, error)
-	GetUserById(id string) (*model.User, error)
-	Save(user *model.PostUser) (*model.User, error)
-	Update(id string, user *model.PostUser) (*model.User, error)
-	Exists(id string) (bool, error)
-	Delete(id string) error
+	GetAllUsers(ctx context.Context) ([]*model.User, error)
+	GetUserById(ctx context.Context, id string) (*model.User, error)
+	Save(ctx context.Context, user *model.PostUser) (*model.User, error)
+	Update(ctx context.Context, id string, user *model.PostUser) (*model.User, error)
+	Exists(ctx context.Context, id string) (bool, error)
+	Delete(ctx context.Context, id string) error
 }
 
 type UserAPI struct {
@@ -26,7 +27,7 @@ func NewUserAPI(userRepository UserRepository) *UserAPI {
 }
 
 func (userAPI *UserAPI) GetUsers(context *gin.Context) {
-	users, err := userAPI.userRepository.GetAllUsers()
+	users, err := userAPI.userRepository.GetAllUsers(context)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error getting users", err)
 		return
@@ -40,7 +41,7 @@ func (userAPI *UserAPI) GetUserById(context *gin.Context) {
 		Abort(context, http.StatusBadRequest, "id is required")
 		return
 	}
-	user, err := userAPI.userRepository.GetUserById(id)
+	user, err := userAPI.userRepository.GetUserById(context, id)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			Abort(context, http.StatusNotFound, "user not found")
@@ -59,7 +60,7 @@ func (userAPI *UserAPI) CreateUser(context *gin.Context) {
 		Abort(context, http.StatusBadRequest, "invalid request")
 		return
 	}
-	created, err := userAPI.userRepository.Save(user)
+	created, err := userAPI.userRepository.Save(context, user)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error saving user", err)
 		return
@@ -73,7 +74,7 @@ func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
 		Abort(context, http.StatusBadRequest, "id is required")
 		return
 	}
-	err := userAPI.userRepository.Delete(id)
+	err := userAPI.userRepository.Delete(context, id)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error deleting user", err)
 		return
@@ -83,7 +84,7 @@ func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
 
 func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
 	id := context.Param("id")
-	exists, err := userAPI.userRepository.Exists(id)
+	exists, err := userAPI.userRepository.Exists(context, id)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error updating user", err)
 		return
@@ -98,7 +99,7 @@ func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
 		Abort(context, http.StatusBadRequest, "invalid request")
 		return
 	}
-	updated, err := userAPI.userRepository.Update(id, user)
+	updated, err := userAPI.userRepository.Update(context, id, user)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error updating user", err)
 		return

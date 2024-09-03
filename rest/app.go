@@ -18,10 +18,6 @@ import (
 	"time"
 )
 
-//TODO
-//more tests
-//context timeouts for db
-
 func StartRestAPIExample() {
 	env := os.Getenv("ENV")
 	if env == "" {
@@ -39,7 +35,7 @@ func StartRestAPIExample() {
 	}
 
 	authentication := auth.NewAuthentication()
-	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres))
+	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres, &appConfig.DB))
 	healthAPI := api.NewHealthAPI(postgres)
 
 	g.GET("/health", healthAPI.Health)

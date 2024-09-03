@@ -4,20 +4,32 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"log"
+	"time"
 )
 
 type AppConfig struct {
-	Server struct {
-		Host string `mapstructure:"host"`
-		Port int    `mapstructure:"port"`
-	} `mapstructure:"server"`
-	DB struct {
-		User     string `mapstructure:"user"`
-		Password string `mapstructure:"password"`
-		Host     string `mapstructure:"host"`
-		Port     int    `mapstructure:"port"`
-		Database string `mapstructure:"database"`
-	} `mapstructure:"db"`
+	Server ServerConfig `mapstructure:"server"`
+	DB     DBConfig     `mapstructure:"db"`
+}
+
+type ServerConfig struct {
+	Host string `mapstructure:"host"`
+	Port int    `mapstructure:"port"`
+}
+
+type DBConfig struct {
+	User     string        `mapstructure:"user"`
+	Password string        `mapstructure:"password"`
+	Host     string        `mapstructure:"host"`
+	Port     int           `mapstructure:"port"`
+	Database string        `mapstructure:"database"`
+	Timeout  time.Duration `mapstructure:"timeout"`
+	Pool     PoolConfig    `mapstructure:"pool"`
+}
+
+type PoolConfig struct {
+	Max int `mapstructure:"max"`
+	Min int `mapstructure:"min"`
 }
 
 func Read(env string) *AppConfig {

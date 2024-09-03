@@ -14,6 +14,7 @@ import (
 func TestAbortWithContextError(t *testing.T) {
 	//given
 	recorder := httptest.NewRecorder()
+	gin.SetMode(gin.TestMode)
 	testCtx, _ := gin.CreateTestContext(recorder)
 	status := http.StatusTeapot
 	message := "user message"
@@ -38,6 +39,7 @@ func TestAbortWithContextError(t *testing.T) {
 func TestAbort(t *testing.T) {
 	//given
 	recorder := httptest.NewRecorder()
+	gin.SetMode(gin.TestMode)
 	testCtx, _ := gin.CreateTestContext(recorder)
 	status := http.StatusTeapot
 	message := "user message"

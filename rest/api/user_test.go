@@ -30,6 +30,7 @@ func TestUserSuite(t *testing.T) {
 }
 
 func (suite *UserSuite) BeforeTest(suiteName, testName string) {
+	gin.SetMode(gin.TestMode)
 	suite.repositoryMock = new(test.UserRepositoryMock)
 	suite.userAPI = NewUserAPI(suite.repositoryMock)
 	suite.recorder = httptest.NewRecorder()
