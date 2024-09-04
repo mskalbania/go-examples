@@ -15,7 +15,7 @@ import (
 type HealthSuite struct {
 	suite.Suite
 	dbMock    *test.DatabaseMock
-	healthAPI *HealthAPI
+	healthAPI HealthAPI
 	ctx       *gin.Context
 	recorder  *httptest.ResponseRecorder
 }

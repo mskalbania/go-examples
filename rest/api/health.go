@@ -5,15 +5,19 @@ import (
 	"go-examples/rest/database"
 )
 
-type HealthAPI struct {
+type HealthAPI interface {
+	Health(ctx *gin.Context)
+}
+
+type healthAPI struct {
 	database database.Database
 }
 
-func NewHealthAPI(database database.Database) *HealthAPI {
-	return &HealthAPI{database: database}
+func NewHealthAPI(database database.Database) HealthAPI {
+	return &healthAPI{database: database}
 }
 
-func (healthAPI *HealthAPI) Health(ctx *gin.Context) {
+func (healthAPI *healthAPI) Health(ctx *gin.Context) {
 	err := healthAPI.database.Ping(ctx)
 	if err != nil {
 		AbortWithContextError(ctx, 500, "db not reachable", err)

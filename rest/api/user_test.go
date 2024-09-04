@@ -20,7 +20,7 @@ var testUserEmail = "email@example.com"
 type UserSuite struct {
 	suite.Suite
 	repositoryMock *test.UserRepositoryMock
-	userAPI        *UserAPI
+	userAPI        UserAPI
 	ctx            *gin.Context
 	recorder       *httptest.ResponseRecorder
 }
@@ -162,7 +162,7 @@ func (suite *UserSuite) TestCreateUserRepositoryError() {
 	require.Contains(suite.T(), suite.recorder.Body.String(), "error saving user")
 }
 
-func (suite *UserSuite) deleteUserSuccess() {
+func (suite *UserSuite) TestDeleteUserSuccess() {
 	//given
 	suite.repositoryMock.On("Delete", testUserId).Return(nil)
 	suite.ctx.Params = append(suite.ctx.Params, gin.Param{Key: "id", Value: testUserId})
@@ -174,7 +174,7 @@ func (suite *UserSuite) deleteUserSuccess() {
 	require.Equal(suite.T(), http.StatusNoContent, suite.recorder.Code)
 }
 
-func (suite *UserSuite) deleteUserNoId() {
+func (suite *UserSuite) TestDeleteUserNoId() {
 	//given
 	suite.ctx.Params = []gin.Param{}
 
@@ -186,7 +186,7 @@ func (suite *UserSuite) deleteUserNoId() {
 	require.Contains(suite.T(), suite.recorder.Body.String(), "id is required")
 }
 
-func (suite *UserSuite) deleteUserRepositoryError() {
+func (suite *UserSuite) TestDeleteUserRepositoryError() {
 	//given
 	suite.repositoryMock.On("Delete", testUserId).Return(fmt.Errorf("db error"))
 	suite.ctx.Params = append(suite.ctx.Params, gin.Param{Key: "id", Value: testUserId})

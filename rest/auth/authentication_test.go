@@ -11,7 +11,7 @@ import (
 
 type AuthenticationSuite struct {
 	suite.Suite
-	authentication *Authentication
+	authentication Authentication
 	ctx            *gin.Context
 	recorder       *httptest.ResponseRecorder
 }

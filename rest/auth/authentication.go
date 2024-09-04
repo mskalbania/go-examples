@@ -8,19 +8,23 @@ import (
 
 var apiKeyHeader = "X-API-KEY"
 
-type Authentication struct {
+type Authentication interface {
+	RequireAPIToken() gin.HandlerFunc
+}
+
+type authentication struct {
 	allowlist map[string]bool
 }
 
 //Naive implementation just to show example of auth middleware
 
-func NewAuthentication() *Authentication {
-	return &Authentication{allowlist: map[string]bool{
+func NewAuthentication() Authentication {
+	return &authentication{allowlist: map[string]bool{
 		"token": true,
 	}}
 }
 
-func (auth *Authentication) RequireAPIToken() gin.HandlerFunc {
+func (auth *authentication) RequireAPIToken() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		apiKey := context.GetHeader(apiKeyHeader)
 		if apiKey == "" {

@@ -18,15 +18,23 @@ type UserRepository interface {
 	Delete(ctx context.Context, id string) error
 }
 
-type UserAPI struct {
+type UserAPI interface {
+	GetUsers(context *gin.Context)
+	GetUserById(context *gin.Context)
+	CreateUser(context *gin.Context)
+	DeleteUser(context *gin.Context)
+	UpdateUser(context *gin.Context)
+}
+
+type userAPI struct {
 	userRepository UserRepository
 }
 
-func NewUserAPI(userRepository UserRepository) *UserAPI {
-	return &UserAPI{userRepository: userRepository}
+func NewUserAPI(userRepository UserRepository) UserAPI {
+	return &userAPI{userRepository: userRepository}
 }
 
-func (userAPI *UserAPI) GetUsers(context *gin.Context) {
+func (userAPI *userAPI) GetUsers(context *gin.Context) {
 	users, err := userAPI.userRepository.GetAllUsers(context)
 	if err != nil {
 		AbortWithContextError(context, http.StatusInternalServerError, "error getting users", err)
@@ -35,7 +43,7 @@ func (userAPI *UserAPI) GetUsers(context *gin.Context) {
 	context.JSON(http.StatusOK, users)
 }
 
-func (userAPI *UserAPI) GetUserById(context *gin.Context) {
+func (userAPI *userAPI) GetUserById(context *gin.Context) {
 	id := context.Param("id")
 	if id == "" {
 		Abort(context, http.StatusBadRequest, "id is required")
@@ -53,7 +61,7 @@ func (userAPI *UserAPI) GetUserById(context *gin.Context) {
 	context.JSON(http.StatusOK, user)
 }
 
-func (userAPI *UserAPI) CreateUser(context *gin.Context) {
+func (userAPI *userAPI) CreateUser(context *gin.Context) {
 	user := new(model.PostUser)
 	err := context.ShouldBindJSON(user)
 	if err != nil {
@@ -68,7 +76,7 @@ func (userAPI *UserAPI) CreateUser(context *gin.Context) {
 	context.JSON(http.StatusCreated, created)
 }
 
-func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
+func (userAPI *userAPI) DeleteUser(context *gin.Context) {
 	id := context.Param("id")
 	if id == "" {
 		Abort(context, http.StatusBadRequest, "id is required")
@@ -79,10 +87,10 @@ func (userAPI *UserAPI) DeleteUser(context *gin.Context) {
 		AbortWithContextError(context, http.StatusInternalServerError, "error deleting user", err)
 		return
 	}
-	context.Status(http.StatusNoContent)
+	context.JSON(http.StatusNoContent, nil)
 }
 
-func (userAPI *UserAPI) UpdateUser(context *gin.Context) {
+func (userAPI *userAPI) UpdateUser(context *gin.Context) {
 	id := context.Param("id")
 	exists, err := userAPI.userRepository.Exists(context, id)
 	if err != nil {

@@ -25,8 +25,6 @@ func StartRestAPIExample() {
 	}
 	appConfig := config.Read(env)
 
-	g := gin.Default()
-
 	postgres, closable, err := database.NewPostgresDatabase(appConfig)
 	defer closable()
 
@@ -38,20 +36,11 @@ func StartRestAPIExample() {
 	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres, &appConfig.DB))
 	healthAPI := api.NewHealthAPI(postgres)
 
-	g.GET("/health", healthAPI.Health)
-
-	userGroup := g.Group("/api/v1").Use(authentication.RequireAPIToken())
-	{
-		userGroup.GET("/users", userAPI.GetUsers)
-		userGroup.GET("/users/:id", userAPI.GetUserById)
-		userGroup.POST("/users", userAPI.CreateUser)
-		userGroup.DELETE("/users/:id", userAPI.DeleteUser)
-		userGroup.PUT("/users/:id", userAPI.UpdateUser)
-	}
+	router := setupRouter(authentication, healthAPI, userAPI)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", appConfig.Server.Host, appConfig.Server.Port),
-		Handler: g.Handler(),
+		Handler: router.Handler(),
 	}
 
 	go func() {
@@ -80,4 +69,19 @@ func gracefulShutdown(server *http.Server) {
 		log.Println("server shutdown timeout")
 	default:
 	}
+}
+
+func setupRouter(auth auth.Authentication, health api.HealthAPI, user api.UserAPI) *gin.Engine {
+	g := gin.Default()
+	g.GET("/health", health.Health)
+
+	userGroup := g.Group("/api/v1").Use(auth.RequireAPIToken())
+	{
+		userGroup.GET("/users", user.GetUsers)
+		userGroup.GET("/users/:id", user.GetUserById)
+		userGroup.POST("/users", user.CreateUser)
+		userGroup.DELETE("/users/:id", user.DeleteUser)
+		userGroup.PUT("/users/:id", user.UpdateUser)
+	}
+	return g
 }
