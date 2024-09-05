@@ -1,30 +1,24 @@
 package test
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
 )
 
 func TestTable(t *testing.T) {
-	testData := []struct {
+	tests := []struct {
 		inputString    string
 		expectedString string
 	}{
 		{"ab  ", "ab"},
 		{"  ab", "ab"},
 	}
-	for _, testCase := range testData {
-		t.Logf("Given input string '%s'", testCase.inputString)
-		{
-			t.Logf("When trim space function called")
-			{
-				result := strings.TrimSpace(testCase.inputString)
-				if result == testCase.expectedString {
-					t.Logf("Then result matches expected string")
-				} else {
-					t.Errorf("Then result doesn't match, expected - '%s', actual - '%s'", testCase.expectedString, result)
-				}
-			}
-		}
+	for _, test := range tests {
+		//this runs subtests
+		t.Run(fmt.Sprintf("input-'%s'", test.inputString), func(t *testing.T) {
+			require.Equal(t, test.expectedString, strings.TrimSpace(test.inputString))
+		})
 	}
 }

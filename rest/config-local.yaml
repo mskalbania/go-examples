@@ -7,7 +7,6 @@ db:
   user: postgres
   password: postgres
   database: postgres
-  poll:
-    max: 1
-    min: 1
+  pool_max_conns: 1
+  pool_min_conns: 1
   timeout: 250ms

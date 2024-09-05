@@ -24,12 +24,8 @@ type DBConfig struct {
 	Port     int           `mapstructure:"port"`
 	Database string        `mapstructure:"database"`
 	Timeout  time.Duration `mapstructure:"timeout"`
-	Pool     PoolConfig    `mapstructure:"pool"`
-}
-
-type PoolConfig struct {
-	Max int `mapstructure:"max"`
-	Min int `mapstructure:"min"`
+	PoolMax  int           `mapstructure:"pool_max_conns"`
+	PoolMin  int           `mapstructure:"pool_min_conns"`
 }
 
 func Read(env string) *AppConfig {

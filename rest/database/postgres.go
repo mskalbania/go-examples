@@ -34,5 +34,5 @@ func NewPostgresDatabase(config *config.AppConfig) (Database, func(), error) {
 
 func connectionString(config *config.AppConfig) string {
 	return fmt.Sprintf("postgres://%s:%s@%s:%d/%s?pool_max_conns=%d&pool_min_conns=%d",
-		config.DB.User, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.Database, config.DB.Pool.Max, config.DB.Pool.Min)
+		config.DB.User, config.DB.Password, config.DB.Host, config.DB.Port, config.DB.Database, config.DB.PoolMax, config.DB.PoolMin)
 }

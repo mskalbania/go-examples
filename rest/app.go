@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-examples/rest/api"
-	"go-examples/rest/auth"
 	"go-examples/rest/config"
 	"go-examples/rest/database"
+	"go-examples/rest/middleware"
 	"go-examples/rest/repository"
 	"log"
 	"net/http"
@@ -32,7 +32,7 @@ func StartRestAPIExample() {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 
-	authentication := auth.NewAuthentication()
+	authentication := middleware.NewAuthentication()
 	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres, &appConfig.DB))
 	healthAPI := api.NewHealthAPI(postgres)
 
@@ -71,8 +71,13 @@ func gracefulShutdown(server *http.Server) {
 	}
 }
 
-func setupRouter(auth auth.Authentication, health api.HealthAPI, user api.UserAPI) *gin.Engine {
+func setupRouter(auth middleware.Authentication, health api.HealthAPI, user api.UserAPI) *gin.Engine {
+	middleware.RegisterMetrics()
+
 	g := gin.Default()
+	g.Use(middleware.Metrics())
+
+	g.GET("/metrics", middleware.MetricsHandler())
 	g.GET("/health", health.Health)
 
 	userGroup := g.Group("/api/v1").Use(auth.RequireAPIToken())
