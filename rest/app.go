@@ -32,6 +32,7 @@ func StartRestAPIExample() {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 
+	middleware.RegisterMetrics()
 	authentication := middleware.NewAuthentication()
 	userAPI := api.NewUserAPI(repository.NewUserRepository(postgres, &appConfig.DB))
 	healthAPI := api.NewHealthAPI(postgres)
@@ -72,8 +73,6 @@ func gracefulShutdown(server *http.Server) {
 }
 
 func setupRouter(auth middleware.Authentication, health api.HealthAPI, user api.UserAPI) *gin.Engine {
-	middleware.RegisterMetrics()
-
 	g := gin.Default()
 	g.Use(middleware.Metrics())
 

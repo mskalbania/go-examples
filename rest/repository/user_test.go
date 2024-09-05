@@ -71,7 +71,7 @@ func SetupPostgresContainer(net *testcontainers.DockerNetwork) (*postgres.Postgr
 		postgres.WithUsername("postgres"),
 		postgres.WithPassword("postgres"),
 		postgres.WithDatabase("postgres"),
-		postgres.WithInitScripts("../database/schema.sql"),
+		postgres.WithInitScripts("../docker/schema.sql"),
 		postgres.BasicWaitStrategies(),
 		network.WithNetwork([]string{"postgres"}, net),
 	)
@@ -124,10 +124,8 @@ func CreateDBProperties(toxiCt testcontainers.Container) (config.DBConfig, error
 		Port:     port.Int(),
 		Database: "postgres",
 		Timeout:  timeout,
-		Pool: config.PoolConfig{
-			Max: 1,
-			Min: 1,
-		},
+		PoolMin:  1,
+		PoolMax:  1,
 	}, nil
 }
 
