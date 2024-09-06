@@ -12,6 +12,7 @@ import (
 	"go-examples/rest/repository"
 	"log"
 	"net/http"
+	//_ "net/http/pprof" register pprof handlers
 	"os"
 	"os/signal"
 	"syscall"
@@ -75,6 +76,14 @@ func gracefulShutdown(server *http.Server) {
 func setupRouter(auth middleware.Authentication, health api.HealthAPI, user api.UserAPI) *gin.Engine {
 	g := gin.Default()
 	g.Use(middleware.Metrics())
+
+	/*Example how to wire in http profiler into gin
+	g.GET("/debug/pprof/profile", gin.WrapH(http.DefaultServeMux))
+	g.GET("/debug/pprof/symbol", gin.WrapH(http.DefaultServeMux))
+	g.GET("/debug/pprof/trace", gin.WrapH(http.DefaultServeMux))
+	g.GET("/debug/pprof/cmdline", gin.WrapH(http.DefaultServeMux))
+	g.GET("/debug/pprof/", gin.WrapH(http.DefaultServeMux))
+	*/
 
 	g.GET("/metrics", middleware.MetricsHandler())
 	g.GET("/health", health.Health)
