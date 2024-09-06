@@ -53,10 +53,10 @@ func SaveUser(user User) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error opening transaction while saving user: %w", err)
 	}
-	if _, err := connection.Exec(context.Background(), insertUserQuery, id, user.Username); err != nil {
+	if _, err := tx.Exec(context.Background(), insertUserQuery, id, user.Username); err != nil {
 		return "", rollback(err, "saving user record", tx)
 	}
-	if _, err := connection.Exec(context.Background(), insertUserDataQuery, id, user.Name, user.Surname, user.Role); err != nil {
+	if _, err := tx.Exec(context.Background(), insertUserDataQuery, id, user.Name, user.Surname, user.Role); err != nil {
 		return "", rollback(err, "saving user data record", tx)
 	}
 	if err := tx.Commit(context.Background()); err != nil {
@@ -96,10 +96,10 @@ func DeleteUser(id string) error {
 	if err != nil {
 		return fmt.Errorf("error opening transaction while deleting user: %w", err)
 	}
-	if _, err := connection.Exec(context.Background(), deleteUserDataQuery, id); err != nil {
+	if _, err := tx.Exec(context.Background(), deleteUserDataQuery, id); err != nil {
 		return rollback(err, "deleting user data record", tx)
 	}
-	if _, err := connection.Exec(context.Background(), deleteUserQuery, id); err != nil {
+	if _, err := tx.Exec(context.Background(), deleteUserQuery, id); err != nil {
 		return rollback(err, "deleting user record", tx)
 	}
 	if err := tx.Commit(context.Background()); err != nil {

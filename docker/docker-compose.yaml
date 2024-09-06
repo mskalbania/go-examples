@@ -6,3 +6,5 @@ services:
       dockerfile: docker/Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      - ENV=local-docker

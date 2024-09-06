@@ -1,0 +1,13 @@
+server:
+  #listen on all interfaces so prometheus can scrape metrics within internal network
+  host:
+  port: 8080
+db:
+  host: postgres
+  port: 5432
+  user: postgres
+  password: postgres
+  database: postgres
+  pool_max_conns: 1
+  pool_min_conns: 1
+  timeout: 250ms
