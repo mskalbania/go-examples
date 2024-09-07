@@ -1,3 +1,17 @@
+*CRUD web service*
+
+A simple web service aiming for production readiness.
+
+Stack:
+
+- Gin as web framework link:https://github.com/mskalbania/go-examples/blob/main/rest/app.go#L76[routing] | link:https://github.com/mskalbania/go-examples/blob/main/rest/api/user.go[api/user.go] | link:https://github.com/mskalbania/go-examples/blob/main/rest/api/health.go[api/health.go]
+* access control <naive> middleware link:https://github.com/mskalbania/go-examples/blob/main/rest/middleware/authentication.go[authentication.go]
+* prometheus metrics middleware link:https://github.com/mskalbania/go-examples/blob/main/rest/middleware/metrics.go[metrics.go]
+- Postgres as datastore, using pgx driver link:https://github.com/mskalbania/go-examples/blob/main/rest/database/postgres.go[postgres.go] | link:https://github.com/mskalbania/go-examples/blob/main/rest/repository/user.go[user.go]
+- viper to load config link:https://github.com/mskalbania/go-examples/blob/main/rest/config/config.go[config.go]
+- testcontainers with toxiproxy & postgres link:https://github.com/mskalbania/go-examples/blob/main/rest/repository/user_test.go[repository/user_test.go]
+- testify for mocking & assertions link:https://github.com/mskalbania/go-examples/blob/main/rest/app_test.go[app_test.go] | link:https://github.com/mskalbania/go-examples/blob/main/rest/api/user_test.go[api/user_test.go] | link:https://github.com/mskalbania/go-examples/blob/main/rest/api/health_test.go[api/health_test.go]
+
 *Generics*
 
 Linked list implementation using generics.
@@ -8,11 +22,6 @@ link:https://github.com/mskalbania/go-examples/blob/main/generics/linked_list.go
 Postgres CRUD repository example using pgx driver.
 Then tested using test containers API.
 link:https://github.com/mskalbania/go-examples/blob/main/postgres/postgres.go[postgres.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository.go[user_repository.go] | link:https://github.com/mskalbania/go-examples/blob/main/postgres/user_repository_test.go[user_repository_test.go]
-
-*REST*
-
-CRUD API exposed using gin framework + sql lite db driver.
-TODO
 
 *Network*
 
