@@ -1,3 +1,8 @@
+Based on:
+
+- *Mastering Go* - https://www.oreilly.com/library/view/mastering-go/9781805127147
+- *Go in Action* - https://www.oreilly.com/library/view/go-in-action/9781617291784
+
 *CRUD web service*
 
 A simple web service aiming for production readiness.
